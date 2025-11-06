@@ -42,3 +42,10 @@
         tags:
           demo_name: "{{ ec2_name_prefix }}"
       register: routetable
+
+    - name: Create TGW
+      amazon.aws.ec2_transit_gateway:
+        region: "{{ ec2_region }}"
+        description: "demo gateway"
+        tags:
+          demo_name: "{{ ec2_name_prefix }}"
