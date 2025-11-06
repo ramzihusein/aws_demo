@@ -10,4 +10,35 @@
         region: "{{ ec2_region }}"
         tags:
           demo_name: "{{ ec2_name_prefix }}"
+      register: create_vpc
           
+    - name: Create subnet for {{ ec2_name_prefix }}
+      amazon.aws.ec2_vpc_subnet:
+        region: {{ ec2_region }}
+        az: {{ ec2_az }}
+        vpc_id: "{{ create_vpc.vpc.id }}"
+        cidr: "{{ ec2_subnet }}"
+        resource_tags:
+          demo_name: "{{ ec2_name_prefix }}"
+      register: create_subnet
+        
+    - name: Create vpc internet gateway for {{ create_vpc.vpc.id }}
+      amazon.aws.ec2_vpc_igw:
+        region: "{{ ec2_region }}"
+        vpc_id: "{{ create_vpc.vpc.id }}"
+        tags:
+          demo_name: "{{ ec2_name_prefix }}"
+      register: igw
+    
+    - name: Create vpc public subnet route table
+      amazon.aws.ec2_vpc_route_table:
+        region: "{{ ec2_region }}
+        vpc_id: "{{ create_vpc.vpc.id }}"
+        subnets:
+          - "{{ create_subnet.subnet.id }}"
+        routes:
+          - dest: 0.0.0.0/0
+            gateway_id: "{{ igw.gateway_id }}
+        tags:
+          demo_name: "{{ ec2_name_prefix }}"
+      register: routetable
