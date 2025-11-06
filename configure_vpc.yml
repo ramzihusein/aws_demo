@@ -49,3 +49,14 @@
         description: "demo gateway"
         tags:
           demo_name: "{{ ec2_name_prefix }}"
+      register: tgw_results
+    
+    - name: Attach VPC to TGW
+      amazon.aws.ec2_transit_gateway_vpc_attachment:
+        transit_gateway: "{{ tgw_results.transit_gateway.transit_gateway_id }}"
+        subnets:
+          - "{{ create_subnet.subnet.id }}"
+        dns_support: true
+        region: "{{ ec2_region }}"
+        tags:
+          demo_name: "{{ ec2_name_prefix }}"
