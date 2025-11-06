@@ -10,7 +10,9 @@
         region: "{{ ec2_region }}"
         tags:
           demo_name: "{{ ec2_name_prefix }}"
+        state: "{{ state }}"
       register: create_vpc
+      
           
     - name: Create subnet for {{ ec2_name_prefix }}
       amazon.aws.ec2_vpc_subnet:
@@ -20,6 +22,7 @@
         cidr: "{{ ec2_subnet }}"
         resource_tags:
           demo_name: "{{ ec2_name_prefix }}"
+        state: "{{ state }}"
       register: create_subnet
         
     - name: Create vpc internet gateway for {{ create_vpc.vpc.id }}
@@ -28,6 +31,7 @@
         vpc_id: "{{ create_vpc.vpc.id }}"
         tags:
           demo_name: "{{ ec2_name_prefix }}"
+        state: "{{ state }}"
       register: igw
     
     - name: Create vpc public subnet route table
@@ -41,6 +45,7 @@
             gateway_id: "{{ igw.gateway_id }}"
         tags:
           demo_name: "{{ ec2_name_prefix }}"
+        state: "{{ state }}"
       register: routetable
 
     - name: Create TGW
@@ -49,6 +54,7 @@
         description: "demo gateway"
         tags:
           demo_name: "{{ ec2_name_prefix }}"
+        state: "{{ state }}"
       register: tgw_results
     
     - name: Attach VPC to TGW
@@ -60,3 +66,4 @@
         region: "{{ ec2_region }}"
         tags:
           demo_name: "{{ ec2_name_prefix }}"
+        state: "{{ state }}"
