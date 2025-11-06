@@ -1,0 +1,15 @@
+---
+- name: Gather available subnets in vpc
+  hosts: localhost
+
+  tasks:
+
+    - name: Gather subnet info and save to variable
+      amazon.aws.ec2_vpc_subnet_info:
+        region: "{{ ec2_region }}"
+        filters:
+          "tag:demo_name": "{{ ec2_name_prefix }}"
+      register: subnet_info
+    
+    - set_fact:
+        subnet_ids: "{{ subnet_info.results | sum(attribute='subnets', start=[]) | map(attribute='subnet_id') }}"
