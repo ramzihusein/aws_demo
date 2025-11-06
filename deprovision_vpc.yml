@@ -1,0 +1,69 @@
+---
+- name: Configure VPC 
+  hosts: localhost
+
+  tasks:
+        
+    - name: Attach VPC to TGW
+      amazon.aws.ec2_transit_gateway_vpc_attachment:
+        transit_gateway: "{{ tgw_results.transit_gateway.transit_gateway_id }}"
+        subnets:
+          - "{{ create_subnet.subnet.id }}"
+        dns_support: true
+        region: "{{ ec2_region }}"
+        tags:
+          demo_name: "{{ ec2_name_prefix }}"
+        state: "{{ state }}"
+
+    - name: Create TGW
+      amazon.aws.ec2_transit_gateway:
+        region: "{{ ec2_region }}"
+        description: "demo gateway"
+        tags:
+          demo_name: "{{ ec2_name_prefix }}"
+        state: "{{ state }}"
+      register: tgw_results
+
+    - name: Create vpc public subnet route table
+      amazon.aws.ec2_vpc_route_table:
+        region: "{{ ec2_region }}"
+        vpc_id: "{{ create_vpc.vpc.id }}"
+        subnets:
+          - "{{ create_subnet.subnet.id }}"
+        routes:
+          - dest: 0.0.0.0/0
+            gateway_id: "{{ igw.gateway_id }}"
+        tags:
+          demo_name: "{{ ec2_name_prefix }}"
+        state: "{{ state }}"
+      register: routetable
+
+    - name: Create vpc internet gateway for {{ create_vpc.vpc.id }}
+      amazon.aws.ec2_vpc_igw:
+        region: "{{ ec2_region }}"
+        vpc_id: "{{ create_vpc.vpc.id }}"
+        tags:
+          demo_name: "{{ ec2_name_prefix }}"
+        state: "{{ state }}"
+      register: igw
+
+    - name: Create subnet for {{ ec2_name_prefix }}
+      amazon.aws.ec2_vpc_subnet:
+        region: "{{ ec2_region }}"
+        az: "{{ ec2_az }}"
+        vpc_id: "{{ create_vpc.vpc.id }}"
+        cidr: "{{ ec2_subnet }}"
+        resource_tags:
+          demo_name: "{{ ec2_name_prefix }}"
+        state: "{{ state }}"
+      register: create_subnet
+
+    - name: Create AWS VPC {{ ec2_name_prefix }}-vpc
+      amazon.aws.ec2_vpc_net:
+        name: "{{ ec2_name_prefix }}-vpc"
+        cidr_block: "{{ ec2_subnet }}"
+        region: "{{ ec2_region }}"
+        tags:
+          demo_name: "{{ ec2_name_prefix }}"
+        state: "{{ state }}"
+      register: create_vpc

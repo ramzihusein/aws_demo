@@ -10,7 +10,7 @@
         region: "{{ ec2_region }}"
         tags:
           demo_name: "{{ ec2_name_prefix }}"
-      #  state: "{{ state }}"
+        state: "{{ state }}"
       register: create_vpc
       
           
