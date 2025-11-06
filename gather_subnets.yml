@@ -13,4 +13,4 @@
     
     - debug:
         msg: "{{ item.cidr_block }}" - "{{ item.subnet_id }}"
-      loop: "{{ subnet_info.subnets|dictsort }}"
+      loop: "{{ subnet_info.subnets }}""
