@@ -12,5 +12,5 @@
       register: subnet_info
     
     - debug:
-        msg: "{{ item.cidr_block }} with id {{ item.subnet_id }}"
+        msg: "CIDR Block: {{ item.cidr_block }} ID: {{ item.subnet_id }}"
       loop: "{{ subnet_info.subnets }}"
