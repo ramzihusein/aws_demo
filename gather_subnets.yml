@@ -13,5 +13,5 @@
     
     - debug:
         var: subnet_info
-  #  - set_fact:
-  #      subnet_ids: "{{ subnet_info | sum(attribute='subnets', start=[]) | map(attribute='subnet_id') }}"
+    - set_fact:
+        subnet_ids: "{{ subnet_info | sum(attribute='subnets', start=[]) | map(attribute='subnet_id') }}"
