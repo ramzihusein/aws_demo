@@ -38,7 +38,7 @@
           - "{{ create_subnet.subnet.id }}"
         routes:
           - dest: 0.0.0.0/0
-            gateway_id: "{{ igw.gateway_id }}
+            gateway_id: "{{ igw.gateway_id }}"
         tags:
           demo_name: "{{ ec2_name_prefix }}"
       register: routetable
