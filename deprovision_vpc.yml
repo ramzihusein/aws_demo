@@ -28,7 +28,7 @@
     - name: Create vpc public subnet route table
       amazon.aws.ec2_vpc_route_table:
         region: "{{ ec2_region }}"
-        vpc_id: "{{ vpc_results.vpcs.id }}"
+        vpc_id: "{{ vpc_results.vpcs[0].id }}"
         tags:
           demo_name: "{{ ec2_name_prefix }}"
         state: "{{ state }}"
