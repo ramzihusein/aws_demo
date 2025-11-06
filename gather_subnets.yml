@@ -12,4 +12,4 @@
       register: subnet_info
     
     - set_fact:
-        subnet_ids: "{{ subnet_info.results | sum(attribute='subnets', start=[]) | map(attribute='subnet_id') }}"
+        subnet_ids: "{{ subnet_info.subnets | sum(attribute='subnets', start=[]) | map(attribute='subnet_id') }}"
