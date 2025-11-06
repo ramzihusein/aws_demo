@@ -14,8 +14,8 @@
           
     - name: Create subnet for {{ ec2_name_prefix }}
       amazon.aws.ec2_vpc_subnet:
-        region: {{ ec2_region }}
-        az: {{ ec2_az }}
+        region: "{{ ec2_region }}""
+        az: "{{ ec2_az }}""
         vpc_id: "{{ create_vpc.vpc.id }}"
         cidr: "{{ ec2_subnet }}"
         resource_tags:
