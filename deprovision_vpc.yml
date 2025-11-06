@@ -19,10 +19,16 @@
         tags:
           demo_name: "{{ ec2_name_prefix }}"
         state: "{{ state }}"
+    
+    - name: Grab VPC ID
+      amazon.aws.ec2_vpc_net_info:
+        region: "{{ ec2_region }}"
+      register: vpc_results
 
     - name: Create vpc public subnet route table
       amazon.aws.ec2_vpc_route_table:
         region: "{{ ec2_region }}"
+        vpc_id: "{{ vpc_results.vpcs.id }}"
         tags:
           demo_name: "{{ ec2_name_prefix }}"
         state: "{{ state }}"
