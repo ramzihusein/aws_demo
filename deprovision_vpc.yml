@@ -7,6 +7,7 @@
     - name: Attach VPC to TGW
       amazon.aws.ec2_transit_gateway_vpc_attachment:
         region: "{{ ec2_region }}"
+        name: "demo"
         tags:
           demo_name: "{{ ec2_name_prefix }}"
         state: "{{ state }}"
